@@ -29,3 +29,7 @@ Nest is [MIT licensed](LICENSE).
 ## Libreria Usadas
 - npm i @nestjs/config
 - npm i joi
+- npm i @nestjs/graphql @nestjs/apollo graphql apollo-server-express @apollo/server
+- npm i apollo-server-core
+- npm i class-validator class-transformer
+- npm i @nestjs/mongoose mongoose

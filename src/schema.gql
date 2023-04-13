@@ -1,0 +1,38 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Band {
+  name: String!
+  _id: String!
+}
+
+type Query {
+  """Ver todas las Bands"""
+  allBands: [Band!]!
+
+  """Buscar una Band especifica"""
+  findBand(id: String!): Band!
+}
+
+type Mutation {
+  """Para crear un nuevo Band"""
+  createBand(createBandInput: CreateBandInput!): Band!
+
+  """Actualizar una Band"""
+  updateBand(updateBandInput: UpdateBandInput!): Band!
+
+  """Eliminar una Band"""
+  removeBand(id: String!): Band!
+}
+
+input CreateBandInput {
+  """Example field (placeholder)"""
+  name: String!
+}
+
+input UpdateBandInput {
+  """Example field (placeholder)"""
+  name: String
+  id: Int!
+}

@@ -4,13 +4,13 @@ import * as Joi from 'joi';
 export const config = registerAs('config', () => {
   return {
     URL: {
-      URL_SERVER: process.env.URL_SERVER,
+      URI_MONGO: process.env.URI_MONGO,
     },
   };
 });
 
 export const validationENV = () => {
   return Joi.object({
-    URL_SERVER: Joi.string().required(),
+    URI_MONGO: Joi.string().required(),
   });
 };

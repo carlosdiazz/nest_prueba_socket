@@ -7,6 +7,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { BandService } from 'src/components/band/band.service';
 
 @WebSocketGateway({
   transports: ['websocket'],
@@ -18,6 +19,8 @@ import { Server, Socket } from 'socket.io';
 export class chatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
+  constructor(private readonly bandsService: BandService) {}
+
   @WebSocketServer()
   server: Server;
 
@@ -25,9 +28,8 @@ export class chatGateway
     console.log('Se inicia cuando inicia el servicio de Socket');
   }
 
-  handleConnection(client: Socket, ...args: any[]) {
-    console.log('Se ejecuta cuando alguien se conecta al server');
-    this.server.emit('nuevo_mensaje', 'Dame luz');
+  async handleConnection(client: Socket, ...args: any[]) {
+    console.log('Se ejecuta cuando alguien se conecta al servers');
   }
 
   handleDisconnect(client: Socket) {
@@ -36,10 +38,14 @@ export class chatGateway
 
   @SubscribeMessage('nuevo_mensaje')
   handleMessage(client: Socket, payload: any) {
-    console.log(payload);
-    //this.server.emit('mensaje', 'hola');
-    //this.server.emit('nuevo_mensaje', 'Dame luz');
-    client.emit('nuevo_mensaje', 'DEBE LLEGARTE');
-    client.broadcast.emit('nuevo_mensaje', 'NO DEBE LLEGARTE');
+    console.log('Alguien envio un mensaje');
+    this.verBands(client);
+  }
+
+  async verBands(client: Socket) {
+    console.log('Entro accccca');
+    const bands = await this.bandsService.findAll();
+    const bandasjson = JSON.stringify(bands);
+    client.emit('active_bands', bandasjson);
   }
 }
