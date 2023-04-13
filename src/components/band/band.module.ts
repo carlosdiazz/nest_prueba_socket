@@ -3,6 +3,7 @@ import { BandService } from './band.service';
 import { BandResolver } from './band.resolver';
 import { MongooseModule } from '@nestjs/mongoose/dist';
 import { Band, BandSchema } from './entities/band.entity';
+import { BandGateway } from './band.gateway';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { Band, BandSchema } from './entities/band.entity';
       },
     ]),
   ],
-  providers: [BandResolver, BandService],
+  providers: [BandResolver, BandService, BandGateway],
   exports: [BandService],
 })
 export class BandModule {}

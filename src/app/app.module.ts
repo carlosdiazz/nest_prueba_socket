@@ -3,15 +3,14 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
+import { MongooseModule } from '@nestjs/mongoose';
 
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { config, validationENV } from './../config/config';
-import { chatGateway } from 'src/chat/chat.gateway';
-import { BandModule } from 'src/components/band/band.module';
-import { MongooseModule } from '@nestjs/mongoose';
+import { BandModule } from './../components';
 
 @Module({
   imports: [
@@ -31,10 +30,9 @@ import { MongooseModule } from '@nestjs/mongoose';
     }),
 
     MongooseModule.forRoot(process.env.URI_MONGO),
-
     BandModule,
   ],
   controllers: [AppController],
-  providers: [AppService, chatGateway],
+  providers: [AppService],
 })
 export class AppModule {}

@@ -4,6 +4,7 @@
 
 type Band {
   name: String!
+  votes: Int!
   _id: String!
 }
 
@@ -27,12 +28,12 @@ type Mutation {
 }
 
 input CreateBandInput {
-  """Example field (placeholder)"""
   name: String!
+  votes: Int!
 }
 
 input UpdateBandInput {
-  """Example field (placeholder)"""
   name: String
+  votes: Int
   id: Int!
 }

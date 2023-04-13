@@ -1,20 +1,26 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { BandService } from './band.service';
 import { Band } from './entities/band.entity';
 import { CreateBandInput } from './dto/create-band.input';
 import { UpdateBandInput } from './dto/update-band.input';
 import { ParseObjectIdPipe } from 'src/common/parse-object-idMongo.pipe';
+import { BandGateway } from './band.gateway';
 
 @Resolver(() => Band)
 export class BandResolver {
-  constructor(private readonly bandService: BandService) {}
+  constructor(
+    private readonly bandService: BandService,
+    private readonly bandGateway: BandGateway,
+  ) {}
 
   @Mutation(() => Band, {
     name: 'createBand',
     description: 'Para crear un nuevo Band',
   })
-  createBand(@Args('createBandInput') createBandInput: CreateBandInput) {
-    return this.bandService.create(createBandInput);
+  async createBand(@Args('createBandInput') createBandInput: CreateBandInput) {
+    const newBand = await this.bandService.create(createBandInput);
+    this.bandGateway.emitirBands();
+    return newBand;
   }
 
   @Query(() => [Band], { name: 'allBands', description: 'Ver todas las Bands' })

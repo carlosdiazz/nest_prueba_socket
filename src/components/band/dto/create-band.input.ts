@@ -1,10 +1,15 @@
-import { InputType, Field } from '@nestjs/graphql';
-import { IsString, MinLength } from 'class-validator';
+import { InputType, Field, Int } from '@nestjs/graphql';
+import { IsNumber, IsString, Min, MinLength } from 'class-validator';
 
 @InputType()
 export class CreateBandInput {
-  @Field(() => String, { description: 'Example field (placeholder)' })
+  @Field(() => String)
   @IsString()
   @MinLength(3)
   name: string;
+
+  @Field(() => Int)
+  @IsNumber()
+  @Min(1)
+  votes: number;
 }

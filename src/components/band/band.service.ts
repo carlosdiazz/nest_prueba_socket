@@ -42,6 +42,16 @@ export class BandService {
     throw new BadGatewayException(); //TODO
   }
 
+  async addVote(id: string): Promise<Band> {
+    try {
+      return await this.bandModel
+        .findByIdAndUpdate(id, { $inc: { votes: 1 } }, { new: true })
+        .exec();
+    } catch (error) {
+      console.log(`ERROR => ${error}`);
+    }
+  }
+
   async remove(id: string): Promise<Band> {
     await this.findOne(id);
 
