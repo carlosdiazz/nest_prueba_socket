@@ -12,7 +12,7 @@ import { chatGateway } from 'src/chat/chat.gateway';
       envFilePath: [`.env`],
       load: [config],
       isGlobal: true,
-      validationSchema: validationENV(),
+      //validationSchema: validationENV(),
     }),
   ],
   controllers: [AppController],
