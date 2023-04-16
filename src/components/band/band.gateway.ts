@@ -38,7 +38,7 @@ export class BandGateway
 
   @SubscribeMessage('nuevo_mensaje')
   handleMessage(client: Socket, payload: any) {
-    console.log('Alguien envio un mensaje');
+    //console.log('Alguien envio un mensaje');
     this.emitirBands();
   }
 
@@ -51,14 +51,14 @@ export class BandGateway
 
   @SubscribeMessage('add_band')
   async addBand(client: Socket, payload: any) {
-    console.log(`CREARON : ${payload.name}`);
+    //console.log(`CREARON : ${payload.name}`);
     await this.bandsService.create({ name: payload.name, votes: 0 });
     this.emitirBands();
   }
 
   @SubscribeMessage('remove_band')
   async removeBand(client: Socket, payload: any) {
-    console.log(`BORRARON : ${payload.id}`);
+    //console.log(`BORRARON : ${payload.id}`);
     await this.bandsService.remove(payload.id);
     this.emitirBands();
   }
