@@ -10,7 +10,8 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { config, validationENV } from './../config/config';
-import { BandModule } from './../components';
+import { BandModule, UserModule } from './../components';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -31,6 +32,8 @@ import { BandModule } from './../components';
 
     MongooseModule.forRoot(process.env.URI_MONGO),
     BandModule,
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

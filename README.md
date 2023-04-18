@@ -33,3 +33,9 @@ Nest is [MIT licensed](LICENSE).
 - npm i apollo-server-core
 - npm i class-validator class-transformer
 - npm i @nestjs/mongoose mongoose
+
+- npm i bcrypt
+- npm i --save @types/bcrypt
+
+- npm i --save @nestjs/passport passport @nestjs/jwt passport-jwt passport-local
+- npm i --save-dev @types/passport-jwt  @types/passport-local

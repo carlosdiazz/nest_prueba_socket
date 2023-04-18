@@ -11,6 +11,7 @@ import { Model } from 'mongoose';
 import { CreateBandInput } from './dto/create-band.input';
 import { UpdateBandInput } from './dto/update-band.input';
 import { Band } from './entities/band.entity';
+import { MESSAGE } from 'src/config/MESSAGE';
 
 @Injectable()
 export class BandService {
@@ -33,7 +34,7 @@ export class BandService {
   async findOne(id: string): Promise<Band> {
     const band = await this.bandModel.findById(id);
     if (!band) {
-      throw new NotFoundException();
+      throw new NotFoundException(MESSAGE.COMUN_ESTE_ID_NO_EXISTE);
     }
     return band;
   }

@@ -6,11 +6,18 @@ export const config = registerAs('config', () => {
     URL: {
       URI_MONGO: process.env.URI_MONGO,
     },
+    JWT: {
+      JWT_SECRET: process.env.JWT_SECRET,
+      JWT_EXPIRE: process.env.JWT_EXPIRE,
+    },
   };
 });
 
 export const validationENV = () => {
   return Joi.object({
     URI_MONGO: Joi.string().required(),
+
+    JWT_SECRET: Joi.string().required(),
+    JWT_EXPIRE: Joi.string().required(),
   });
 };
