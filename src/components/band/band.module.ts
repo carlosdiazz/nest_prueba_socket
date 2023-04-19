@@ -4,6 +4,8 @@ import { BandResolver } from './band.resolver';
 import { MongooseModule } from '@nestjs/mongoose/dist';
 import { Band, BandSchema } from './entities/band.entity';
 import { BandGateway } from './band.gateway';
+import { AuthModule } from 'src/auth/auth.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import { BandGateway } from './band.gateway';
         schema: BandSchema,
       },
     ]),
+    AuthModule,
+    UserModule,
   ],
   providers: [BandResolver, BandService, BandGateway],
   exports: [BandService],

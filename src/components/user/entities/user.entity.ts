@@ -15,10 +15,10 @@ export class User {
   email: string;
 
   //TODO quitar que se vea contrasena
-  @Prop({ required: true })
+  @Prop({ required: true, select: false })
   password: string;
 
-  @Prop({ required: true, default: true })
+  @Prop({ required: true, default: false })
   online: boolean;
 }
 

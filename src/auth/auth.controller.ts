@@ -13,7 +13,7 @@ import { LoginAuthDto } from './dto/login-auth.dto';
 
 import { CreateUserDto } from 'src/components/user/dto/create-user.dto';
 import { AuthResponse, payloadTokenInterface } from './types/types';
-import { JwyAuthGuard } from './guards/jwt-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from 'src/components/user/entities/user.entity';
 
@@ -33,7 +33,7 @@ export class AuthController {
   }
 
   @Get('renew')
-  @UseGuards(JwyAuthGuard)
+  @UseGuards(JwtAuthGuard)
   renewToken(
     @CurrentUser() user: payloadTokenInterface,
   ): Promise<AuthResponse> {

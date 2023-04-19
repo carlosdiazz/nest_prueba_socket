@@ -26,6 +26,14 @@ export class UserService {
     }
   }
 
+  async devolverPasswordById(id: string) {
+    const pass = await this.userModel
+      .findById(id)
+      .select({ password: true })
+      .exec();
+    return pass.password;
+  }
+
   async create(createUserDto: CreateUserDto): Promise<User> {
     await this.findByEmail(createUserDto.email);
     try {
@@ -39,7 +47,7 @@ export class UserService {
   }
 
   async findAll(): Promise<User[]> {
-    return await this.userModel.find().exec();
+    return await this.userModel.find().sort({ online: -1 }).exec();
   }
 
   async findOneById(id: string): Promise<User> {
@@ -53,7 +61,6 @@ export class UserService {
   async findByEmailAuth(email: string): Promise<User> {
     const user = await this.userModel.findOne({ email: email });
     if (!user) {
-      //console.log('Entroo aqui');
       throw new UnauthorizedException();
     }
     return user;
@@ -67,5 +74,13 @@ export class UserService {
   async remove(id: string): Promise<User> {
     //return `This action removes a #${id} user`;
     throw new BadGatewayException(MESSAGE.FALTA_IMPLEMENTAR_ESTE_METODO);
+  }
+
+  async connectUser(id: string) {
+    await this.userModel.findByIdAndUpdate(id, { online: true });
+  }
+
+  async disconectUser(id: string) {
+    await this.userModel.findByIdAndUpdate(id, { online: false });
   }
 }

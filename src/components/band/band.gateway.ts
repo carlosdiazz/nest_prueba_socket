@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -6,8 +7,13 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+
+//PROPIO
 import { Server, Socket } from 'socket.io';
+import { AuthService } from 'src/auth/auth.service';
+import { WsJwtAuthGuard } from 'src/auth/guards/ws-auth.guard';
 import { BandService } from 'src/components/band/band.service';
+import { UserService } from '../user/user.service';
 
 @WebSocketGateway({
   transports: ['websocket'],
@@ -16,10 +22,15 @@ import { BandService } from 'src/components/band/band.service';
     origin: '*',
   },
 })
+@UseGuards(WsJwtAuthGuard)
 export class BandGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor(private readonly bandsService: BandService) {}
+  constructor(
+    private readonly bandsService: BandService,
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+  ) {}
 
   @WebSocketServer()
   private server: Server;
@@ -28,12 +39,25 @@ export class BandGateway
     console.log('Se inicia cuando inicia el servicio de Socket');
   }
 
-  async handleConnection(client: Socket, ...args: any[]) {
-    console.log('Se ejecuta cuando alguien se conecta al servers');
+  handleConnection(client: Socket, ...args: any[]) {
+    console.log('Se ejecuta cuando alguien se CONECTA al WS');
+    const responseAuthorization = client.handshake.headers.authorization;
+    if (!responseAuthorization) return;
+
+    const [, token] = responseAuthorization.split(' ');
+    const payloadToken = this.authService.validateJwtToken(token);
+    this.userService.connectUser(payloadToken.id);
   }
 
   handleDisconnect(client: Socket) {
-    console.log('Se ejecuta cuando alguien se desconecta');
+    console.log('Se ejecuta cuando alguien se DESCONECTA al WS');
+
+    const responseAuthorization = client.handshake.headers.authorization;
+    if (!responseAuthorization) return;
+
+    const [, token] = responseAuthorization.split(' ');
+    const payloadToken = this.authService.validateJwtToken(token);
+    this.userService.disconectUser(payloadToken.id);
   }
 
   @SubscribeMessage('nuevo_mensaje')
