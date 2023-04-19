@@ -53,7 +53,7 @@ export class UserService {
   async findByEmailAuth(email: string): Promise<User> {
     const user = await this.userModel.findOne({ email: email });
     if (!user) {
-      console.log('Entroo aqui');
+      //console.log('Entroo aqui');
       throw new UnauthorizedException();
     }
     return user;
