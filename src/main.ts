@@ -23,6 +23,8 @@ async function bootstrap() {
     }),
   );
 
+  app.setGlobalPrefix('api');
+
   //app.useWebSocketAdapter(new IoAdapter(app));
   await app.listen(process.env.PORT || 9999, () => {
     console.log(

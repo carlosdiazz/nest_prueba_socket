@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadGatewayException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
@@ -30,12 +34,26 @@ export class AuthService {
     };
   }
 
-  async register(createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async register(createUserDto: CreateUserDto): Promise<AuthResponse> {
+    const user = await this.usersService.create(createUserDto);
+    const token = this.generateJwt(user);
+    return {
+      token,
+      user,
+    };
   }
 
   generateJwt(user: User) {
     const payload: payloadTokenInterface = { id: user._id, name: user.name };
     return this.jwtService.sign(payload);
+  }
+
+  async renewToken(payloadToken: payloadTokenInterface): Promise<AuthResponse> {
+    const user = await this.usersService.findOneById(payloadToken.id);
+    const token = this.generateJwt(user);
+    return {
+      user,
+      token,
+    };
   }
 }

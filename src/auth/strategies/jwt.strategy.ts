@@ -22,8 +22,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: payloadTokenInterface): Promise<any> {
+  //Lo que mande aqui se guardar en el Request
+  async validate(
+    payload: payloadTokenInterface,
+  ): Promise<payloadTokenInterface> {
     //TODO devolver el user
-    return { userId: payload.id, name: payload.name };
+    return { id: payload.id, name: payload.name };
   }
 }

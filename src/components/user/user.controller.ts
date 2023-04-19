@@ -29,7 +29,7 @@ export class UserController {
 
   @Get(':id')
   async findOne(@Param('id', ParseObjectIdPipe) id: string): Promise<User> {
-    return this.userService.findOne(id);
+    return this.userService.findOneById(id);
   }
 
   @Patch(':id')
