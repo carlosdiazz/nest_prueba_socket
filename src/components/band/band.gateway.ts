@@ -47,6 +47,8 @@ export class BandGateway
     const [, token] = responseAuthorization.split(' ');
     const payloadToken = this.authService.validateJwtToken(token);
     this.userService.connectUser(payloadToken.id);
+
+    //this.handleDisconnect(client);
   }
 
   handleDisconnect(client: Socket) {
