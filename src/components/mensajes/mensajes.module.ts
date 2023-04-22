@@ -17,5 +17,6 @@ import { Mensaje, MensajeSchema } from './entities/mensaje.entity';
   ],
   controllers: [MensajesController],
   providers: [MensajesService],
+  exports: [MensajesService],
 })
 export class MensajesModule {}

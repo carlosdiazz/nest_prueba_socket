@@ -1,16 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+
+//PROPIO
 import { CreateMensajeDto } from './dto/create-mensaje.dto';
 import { payloadTokenInterface } from 'src/auth/types/types';
+import { Mensaje } from './entities/mensaje.entity';
+
 //import { UpdateMensajeDto } from './dto/update-mensaje.dto';
 
 @Injectable()
 export class MensajesService {
-  create(createMensajeDto: CreateMensajeDto) {
-    return 'This action adds a new mensaje';
+  constructor(
+    @InjectModel(Mensaje.name) private mensajeModel: Model<Mensaje>,
+  ) {}
+
+  async create(createMensajeDto: CreateMensajeDto) {
+    try {
+      const newMensaje = new this.mensajeModel({
+        de: createMensajeDto.de,
+        para: createMensajeDto.para,
+        texto: createMensajeDto.texto,
+      });
+      return await newMensaje.save();
+    } catch (error) {
+      console.log(`Error=> ${error}`);
+      throw new BadRequestException(error?.message);
+    }
   }
 
-  findAll(payloadToken: payloadTokenInterface) {
-    return `This action returns all mensajes`;
+  async findAllByUser(payloadToken: payloadTokenInterface, mensajeDe: string) {
+    const id = payloadToken.id;
+
+    const mensajes = await this.mensajeModel
+      .find({
+        $or: [
+          { de: id, para: mensajeDe },
+          { de: mensajeDe, para: id },
+        ],
+      })
+      .sort({ createdAt: -1 });
+
+    return { data: mensajes };
   }
 
   //findOne(id: number) {

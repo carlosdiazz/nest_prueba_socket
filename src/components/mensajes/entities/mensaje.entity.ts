@@ -4,10 +4,8 @@ import { HydratedDocument, Types } from 'mongoose';
 //Propio
 import { User } from 'src/components/user/entities/user.entity';
 
-Schema({ timestamps: true });
+@Schema({ timestamps: true })
 export class Mensaje {
-  _id: string;
-
   @Prop({ required: true, type: Types.ObjectId, ref: User.name })
   de: string;
 
@@ -16,6 +14,8 @@ export class Mensaje {
 
   @Prop({ required: true })
   texto: string;
+
+  _id: string;
 }
 
 export type MensajeDocument = HydratedDocument<Mensaje>;

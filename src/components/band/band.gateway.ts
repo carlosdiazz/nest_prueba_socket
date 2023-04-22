@@ -16,6 +16,8 @@ import { BandService } from 'src/components/band/band.service';
 import { UserService } from '../user/user.service';
 import { sendMessage } from './types/sendMensaje.interface';
 import { emit } from 'process';
+import { MensajesService } from '../mensajes/mensajes.service';
+import { CreateMensajeDto } from '../mensajes/dto/create-mensaje.dto';
 
 @WebSocketGateway({
   transports: ['websocket'],
@@ -32,6 +34,7 @@ export class BandGateway
     private readonly bandsService: BandService,
     private readonly authService: AuthService,
     private readonly userService: UserService,
+    private readonly mensajeService: MensajesService,
   ) {}
 
   @WebSocketServer()
@@ -42,7 +45,7 @@ export class BandGateway
   }
 
   handleConnection(client: Socket, ...args: any[]) {
-    console.log('Se ejecuta cuando alguien se CONECTA al WS');
+    //console.log('Se ejecuta cuando alguien se CONECTA al WS');
     const responseAuthorization = client.handshake.headers.authorization;
     if (!responseAuthorization) return;
     //Verificaciopn del cliente para obtener su ID
@@ -56,7 +59,7 @@ export class BandGateway
   }
 
   handleDisconnect(client: Socket) {
-    console.log('Se ejecuta cuando alguien se DESCONECTA al WS');
+    //console.log('Se ejecuta cuando alguien se DESCONECTA al WS');
 
     const responseAuthorization = client.handshake.headers.authorization;
     if (!responseAuthorization) return;
@@ -67,8 +70,8 @@ export class BandGateway
   }
 
   @SubscribeMessage('nuevo_mensaje')
-  async handleMessage(client: Socket, payload: sendMessage) {
-    console.log(payload);
+  async handleMessage(client: Socket, payload: CreateMensajeDto) {
+    await this.mensajeService.create(payload);
     this.server.to(payload.para).emit('mensaje_personal', payload);
   }
 

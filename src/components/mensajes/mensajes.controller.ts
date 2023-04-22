@@ -17,9 +17,12 @@ export class MensajesController {
     return this.mensajesService.create(createMensajeDto);
   }
 
-  @Get()
-  findAll(@CurrentUser() payloadToken: payloadTokenInterface) {
-    return this.mensajesService.findAll(payloadToken);
+  @Get(':de')
+  findAllByUser(
+    @CurrentUser() payloadToken: payloadTokenInterface,
+    @Param('de') mensajeDe: string,
+  ) {
+    return this.mensajesService.findAllByUser(payloadToken, mensajeDe);
   }
 
   //@Get(':id')

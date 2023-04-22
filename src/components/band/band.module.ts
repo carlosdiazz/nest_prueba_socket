@@ -6,6 +6,7 @@ import { Band, BandSchema } from './entities/band.entity';
 import { BandGateway } from './band.gateway';
 import { AuthModule } from 'src/auth/auth.module';
 import { UserModule } from '../user/user.module';
+import { MensajesModule } from '../mensajes/mensajes.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { UserModule } from '../user/user.module';
     ]),
     AuthModule,
     UserModule,
+    MensajesModule,
   ],
   providers: [BandResolver, BandService, BandGateway],
   exports: [BandService],
