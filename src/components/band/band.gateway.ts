@@ -14,6 +14,8 @@ import { AuthService } from 'src/auth/auth.service';
 import { WsJwtAuthGuard } from 'src/auth/guards/ws-auth.guard';
 import { BandService } from 'src/components/band/band.service';
 import { UserService } from '../user/user.service';
+import { sendMessage } from './types/sendMensaje.interface';
+import { emit } from 'process';
 
 @WebSocketGateway({
   transports: ['websocket'],
@@ -35,7 +37,7 @@ export class BandGateway
   @WebSocketServer()
   private server: Server;
 
-  afterInit(server: any) {
+  afterInit() {
     console.log('Se inicia cuando inicia el servicio de Socket');
   }
 
@@ -43,12 +45,14 @@ export class BandGateway
     console.log('Se ejecuta cuando alguien se CONECTA al WS');
     const responseAuthorization = client.handshake.headers.authorization;
     if (!responseAuthorization) return;
-
+    //Verificaciopn del cliente para obtener su ID
     const [, token] = responseAuthorization.split(' ');
     const payloadToken = this.authService.validateJwtToken(token);
     this.userService.connectUser(payloadToken.id);
 
-    //this.handleDisconnect(client);
+    //Ingresar al usuario a una sala en particular
+    console.log(payloadToken.id);
+    client.join(payloadToken.id);
   }
 
   handleDisconnect(client: Socket) {
@@ -63,9 +67,9 @@ export class BandGateway
   }
 
   @SubscribeMessage('nuevo_mensaje')
-  handleMessage(client: Socket, payload: any) {
-    //console.log('Alguien envio un mensaje');
-    this.emitirBands();
+  async handleMessage(client: Socket, payload: sendMessage) {
+    console.log(payload);
+    this.server.to(payload.para).emit('mensaje_personal', payload);
   }
 
   @SubscribeMessage('vote_band')

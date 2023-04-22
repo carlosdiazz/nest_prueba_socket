@@ -14,7 +14,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { MESSAGE } from 'src/config/MESSAGE';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { payloadTokenInterface } from 'src/auth/types/types';
 
 @Injectable()
@@ -49,7 +48,6 @@ export class UserService {
   }
 
   async findAll(payloadToken: payloadTokenInterface): Promise<User[]> {
-    console.log(payloadToken.id);
     return await this.userModel
       .find({ _id: { $ne: payloadToken.id } })
       .sort({ online: -1 })
