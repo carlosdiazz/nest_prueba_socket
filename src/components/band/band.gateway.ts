@@ -14,8 +14,6 @@ import { AuthService } from 'src/auth/auth.service';
 import { WsJwtAuthGuard } from 'src/auth/guards/ws-auth.guard';
 import { BandService } from 'src/components/band/band.service';
 import { UserService } from '../user/user.service';
-import { sendMessage } from './types/sendMensaje.interface';
-import { emit } from 'process';
 import { MensajesService } from '../mensajes/mensajes.service';
 import { CreateMensajeDto } from '../mensajes/dto/create-mensaje.dto';
 
@@ -45,28 +43,37 @@ export class BandGateway
   }
 
   handleConnection(client: Socket, ...args: any[]) {
-    //console.log('Se ejecuta cuando alguien se CONECTA al WS');
-    const responseAuthorization = client.handshake.headers.authorization;
-    if (!responseAuthorization) return;
-    //Verificaciopn del cliente para obtener su ID
-    const [, token] = responseAuthorization.split(' ');
-    const payloadToken = this.authService.validateJwtToken(token);
-    this.userService.connectUser(payloadToken.id);
+    try {
+      //console.log('Se ejecuta cuando alguien se CONECTA al WS');
+      const responseAuthorization = client.handshake.headers.authorization;
+      if (!responseAuthorization) return;
+      //Verificaciopn del cliente para obtener su ID
+      console.log(responseAuthorization);
+      const [, token] = responseAuthorization.split(' ');
+      const payloadToken = this.authService.validateJwtToken(token);
+      this.userService.connectUser(payloadToken.id);
 
-    //Ingresar al usuario a una sala en particular
-    console.log(payloadToken.id);
-    client.join(payloadToken.id);
+      //Ingresar al usuario a una sala en particular
+      //console.log(payloadToken.id);
+      client.join(payloadToken.id);
+    } catch (error) {
+      console.log(`Error 1 => ${error}`);
+    }
   }
 
   handleDisconnect(client: Socket) {
-    //console.log('Se ejecuta cuando alguien se DESCONECTA al WS');
+    try {
+      //console.log('Se ejecuta cuando alguien se DESCONECTA al WS');
 
-    const responseAuthorization = client.handshake.headers.authorization;
-    if (!responseAuthorization) return;
+      const responseAuthorization = client.handshake.headers.authorization;
+      if (!responseAuthorization) return;
 
-    const [, token] = responseAuthorization.split(' ');
-    const payloadToken = this.authService.validateJwtToken(token);
-    this.userService.disconectUser(payloadToken.id);
+      const [, token] = responseAuthorization.split(' ');
+      const payloadToken = this.authService.validateJwtToken(token);
+      this.userService.disconectUser(payloadToken.id);
+    } catch (error) {
+      console.log(`Error 2 => ${error}`);
+    }
   }
 
   @SubscribeMessage('nuevo_mensaje')
@@ -77,7 +84,7 @@ export class BandGateway
 
   @SubscribeMessage('vote_band')
   async voteBand(client: Socket, payload: any) {
-    console.log(`VOTARON : ${payload.id}`);
+    //console.log(`VOTARON : ${payload.id}`);
     await this.bandsService.addVote(payload.id);
     this.emitirBands();
   }

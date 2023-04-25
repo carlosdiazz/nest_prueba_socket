@@ -63,6 +63,7 @@ export class AuthService {
   }
 
   validateJwtToken(token: string): payloadTokenInterface {
+    console.log(`El token que llega => ${token}`);
     return jwt.verify(
       token,
       this.configService.JWT.JWT_SECRET,
